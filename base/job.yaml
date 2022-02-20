@@ -1,0 +1,29 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: burpsuite
+spec:
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: burpsuite
+        app.kubernetes.io/instance: burpsuite
+        app.kubernetes.io/version: 2022.1.1
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: burpsuite
+          image: ghcr.io/k4yt3x/burpsuite:2022.1.1
+          env:
+            - name: DISPLAY
+              value: :0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: x11-unix
+              mountPath: /tmp/.X11-unix
+      volumes:
+        - name: x11-unix
+          hostPath:
+            path: /tmp/.X11-unix
+            type: Directory
